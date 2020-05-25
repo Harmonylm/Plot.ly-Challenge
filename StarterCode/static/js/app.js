@@ -1,20 +1,20 @@
-// This function is called when a dropdown menu item is selected
+// Function for a dropdown menu
 function optionChanged(ID) {
-    // must fetch the data in order to access patient IDs in the onChange - github hosted, no server startup needed
+    // need data to access patient IDs
     d3
     .json("https://raw.githubusercontent.com/Harmonylm/Plot.ly-Challenge/master/data/samples.json")
     .then((samples) => {
 
-        // grab the index of the name selected from the data
+        // grabs index of the patient ID
         var arr = samples.names;
         var IDindex = arr.indexOf(ID);
         console.log(IDindex);
 
-        // grab the index of the metadata for selected patient
+        // grabs index of the metadata for patient ID
         var meta = samples.metadata[IDindex];
         console.log("meta", meta);
 
-        // clears the divs with the old patient's data in them, if it exists.
+        // clears old patient's ID
         d3.select("#sample-metadata")
         .selectAll("div").remove();
 
@@ -50,8 +50,8 @@ function optionChanged(ID) {
             ydata.push(currentDatum.otu_id);
         };
 
-        // create the bar chart data and layout once all of that has been assembled
-        // data is already sorted, so slice grabs top 10 and reverse puts most populous colonies at top of chart
+        // create the bar chart data and layout
+        // data is already sorted
         var data = [{
             type: 'bar',
             x: xdata.slice(0, 10).reverse(),
@@ -68,7 +68,7 @@ function optionChanged(ID) {
           
         Plotly.newPlot('bar', data, layout);
 
-        // do the same from the bubble chart, but grab all the data
+        //grab all the data
         // making the y-values from the bar chart the x-values for the bubble chart
         bubbleX = ydata
         // making the x-values from the bar chart the y-values for the bubble chart
@@ -79,7 +79,7 @@ function optionChanged(ID) {
             y: bubbleY,
             mode: 'markers',
             marker: {
-              // making the color argument an array sets the color automatically to a gradient
+             
               color: bubbleX,
               size: bubbleY
             },
@@ -98,9 +98,6 @@ function optionChanged(ID) {
     });
 };
 
-// this code below runs on startup, not just when the onChange is detected.
-// displays the bubble chart and bar graph for whatever value is already populating the dropodown's field
-// (we expect it to always be the first value)
 d3
     .json("https://raw.githubusercontent.com/rose-gonoud/plotly-challenge/master/data/samples.json")
     
